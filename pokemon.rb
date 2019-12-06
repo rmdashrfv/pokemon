@@ -3,11 +3,10 @@ require 'curb'
 require 'json'
 
 class Pokemon
-  # the pokemon should be able to gain at least 10 levels
   # Every time the pokemon levels up, it will gain a small boost in stats in 2 areas
   # the stat boost should be 3% of whatever the stat currently is
   @@url = 'https://pokeapi.co/api/v2/'
-  attr_accessor :name, :img_front, :img_back
+  attr_accessor :name, :img_front, :img_back, :loaded
   def initialize(name)
     @name = name
     @hp = nil
@@ -19,6 +18,7 @@ class Pokemon
     @img_back = nil
     @exp = 0
     @level = 1
+    @loaded = false
     self.request_pokemon
   end
   
@@ -36,7 +36,7 @@ class Pokemon
     }
     @img_front = data['sprites']['front_default']
     @img_back = data['sprites']['back_default']
-    self.assign_stats(stats)
+    @loaded = self.assign_stats(stats)
   end
 
   def assign_stats(s)
@@ -91,10 +91,14 @@ end
 
 @pokemon = Pokemon.new('Blaziken')
 
-if @pokemon.img_front
-  File.open(%(./public/gamedata/#{@pokemon.name.downcase}.json), 'w') { |file|
-    file.write(%(#{@pokemon.serialize}))
-  }
+if @pokemon.loaded
+
+  file = File.open(%(./public/gamedata/#{@pokemon.name.downcase}.json), 'r') 
+  unless file
+    File.open(%(./public/gamedata/#{@pokemon.name.downcase}.json), 'w') { |file|
+      file.write(%(#{@pokemon.serialize}))
+    }
+  end
 end
 
 
