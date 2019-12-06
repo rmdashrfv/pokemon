@@ -50,7 +50,7 @@ class Pokemon
 
   def serialize
     return {
-     'name': @name, 'atk': @atk, 'defense': @defense, 'sp_atk': @sp_atk, 'sp_def': @sp_def
+     'name': @name, 'atk': @atk, 'defense': @defense, 'sp_atk': @sp_atk, 'sp_def': @sp_def, 'level':@level, 'exp': @exp
     }.to_json
   end
 
@@ -77,13 +77,22 @@ class Pokemon
       return %(#{@name} gained #{n} EXP)
     end
   end
+
+
+  def save
+    # whatever the state of the current instance
+    # write that to the pokemon's file
+    File.open(%(./public/gamedata/#{@name.downcase}.json), 'w') { |f|
+      f.write(%(#{self.serialize}))
+    } 
+  end
  
 end
 
 @pokemon = Pokemon.new('Blaziken')
 
 if @pokemon.img_front
-  File.open(%(#{@pokemon.name.downcase}.json), 'w') { |file|
+  File.open(%(./public/gamedata/#{@pokemon.name.downcase}.json), 'w') { |file|
     file.write(%(#{@pokemon.serialize}))
   }
 end
