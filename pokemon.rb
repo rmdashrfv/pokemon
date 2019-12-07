@@ -1,13 +1,16 @@
 require 'httparty'
 require 'curb'
 require 'json'
+require 'securerandom'
 
 class Pokemon
   # Every time the pokemon levels up, it will gain a small boost in stats in 2 areas
   # the stat boost should be 3% of whatever the stat currently is
   @@url = 'https://pokeapi.co/api/v2/'
   attr_accessor :name, :img_front, :img_back, :loaded
+  attr_reader :id
   def initialize(name)
+    @id = SecureRandom.hex(12)
     @name = name
     @hp = nil
     @atk = nil
@@ -50,7 +53,7 @@ class Pokemon
 
   def serialize
     return {
-     'name': @name, 'atk': @atk, 'defense': @defense, 'sp_atk': @sp_atk, 'sp_def': @sp_def, 'level':@level, 'exp': @exp
+    'id': @id, 'name': @name, 'atk': @atk, 'defense': @defense, 'sp_atk': @sp_atk, 'sp_def': @sp_def, 'level':@level, 'exp': @exp
     }.to_json
   end
 
@@ -82,23 +85,11 @@ class Pokemon
   def save
     # whatever the state of the current instance
     # write that to the pokemon's file
-    File.open(%(./public/gamedata/#{@name.downcase}.json), 'w') { |f|
+    File.open(%(./public/gamedata/#{@name.downcase}_#{@id}.json), 'w') { |f|
       f.write(%(#{self.serialize}))
     } 
   end
  
-end
-
-@pokemon = Pokemon.new('Blaziken')
-
-if @pokemon.loaded
-
-  file = File.open(%(./public/gamedata/#{@pokemon.name.downcase}.json), 'r') 
-  unless file
-    File.open(%(./public/gamedata/#{@pokemon.name.downcase}.json), 'w') { |file|
-      file.write(%(#{@pokemon.serialize}))
-    }
-  end
 end
 
 
