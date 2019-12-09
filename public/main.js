@@ -11,7 +11,7 @@ loadButton.addEventListener('click', (e) => {
 })
 
 let loadGame = async () => {
-  let req = await fetch('./gamedata/blaziken.json')
+  let req = await fetch('./gamedata/blaziken_19009bae0c05ccc26c16b1e0.json')
   let res = await req.json()
   // populate the slot div with relevant data
 console.log(res)

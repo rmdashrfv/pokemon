@@ -15,6 +15,12 @@ get '/pokemon/:id' do
   end
 end
 
+get '/team' do
+  f = File.open('./public/gamedata/blaziken_19009bae0c05ccc26c16b1e0.json', 'r')
+  data = JSON.parse f.read
+  @pokemon = data
+  erb :team
+end
 
 post '/pokemon' do
   puts params
