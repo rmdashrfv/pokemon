@@ -6,7 +6,12 @@
 </head>
 <body>
   <h1>Pokemon Team</h1>
-  <%= @pokemon %>  
+  <% @party.each do |pokemon| %>
+    <div class="pokemon-card">
+      <h3><%= pokemon.name %> Lv. <%= pokemon.level %></h3>
+      <img src="<%= pokemon.img_front %>">
+    </div>
+  <% end %>  
   <script src="main.js"></script>
 </body>
 </html>

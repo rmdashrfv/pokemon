@@ -8,7 +8,7 @@ class Pokemon
   # the stat boost should be 3% of whatever the stat currently is
   @@url = 'https://pokeapi.co/api/v2/'
   attr_accessor :name, :img_front, :img_back, :loaded
-  attr_reader :id
+  attr_reader :id, :level, :sp_atk, :sp_def, :atk, :defense, :hp, :exp
   def initialize(name, init=true)
     @id = SecureRandom.hex(12)
     @name = name
@@ -37,7 +37,10 @@ class Pokemon
       atk: data['stats'][4]['base_stat'],
       defense: data['stats'][3]['base_stat'], 
       sp_atk: data['stats'][2]['base_stat'],
-      sp_def: data['stats'][1]['base_stat']
+      sp_def: data['stats'][1]['base_stat'],
+      img_front: data['sprites']['front_default'],
+      img_back: data['sprites']['back_default'],
+      level: 1
     }
     @img_front = data['sprites']['front_default']
     @img_back = data['sprites']['back_default']
@@ -50,6 +53,9 @@ class Pokemon
     @defense = s[:defense]
     @sp_atk = s[:sp_atk]
     @sp_def = s[:sp_def]
+    @level = s[:level]
+    @img_front = s[:img_front]
+    @img_back = s[:img_back]
     return true
   end
 
@@ -62,13 +68,12 @@ class Pokemon
     }
     new = pokemon.assign_stats(converted_data)
     puts converted_data
-    return new
+    return pokemon
   end
 
   def serialize
     return {
-    'id': @id, 'name': @name, 'atk': @atk, 'defense': @defense, 'sp_atk': @sp_atk, 'sp_def': @sp_def, 'level':@level, 'exp': @exp
-    }.to_json
+    'id': @id, 'name': @name, 'atk': @atk, 'defense': @defense, 'sp_atk': @sp_atk, 'sp_def': @sp_def, 'level':@level, 'exp': @exp, 'img_front': @img_front, 'img_back': @img_back}.to_json
   end
 
   def sim_exp(n) # simulate rewarding EXP points
