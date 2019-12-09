@@ -9,7 +9,7 @@ class Pokemon
   @@url = 'https://pokeapi.co/api/v2/'
   attr_accessor :name, :img_front, :img_back, :loaded
   attr_reader :id
-  def initialize(name)
+  def initialize(name, init=true)
     @id = SecureRandom.hex(12)
     @name = name
     @hp = nil
@@ -22,12 +22,14 @@ class Pokemon
     @exp = 0
     @level = 1
     @loaded = false
-    self.request_pokemon
+    @init = init
+    self.request_pokemon if init == true
   end
   
   def request_pokemon
     # req = Curl::Easy.perform(%(#{@@url}pokemon/#{@name.downcase}))
     # data = JSON.parse(req.body_str)
+    puts "REQUESTING POKEMON API"
     req = HTTParty.get(%(#{@@url}pokemon/#{@name.downcase}))
     data = JSON.parse(req.body)
     stats = {
@@ -49,6 +51,18 @@ class Pokemon
     @sp_atk = s[:sp_atk]
     @sp_def = s[:sp_def]
     return true
+  end
+
+  def self.load(str)
+    data = JSON.parse str
+    pokemon = Pokemon.new(data['name'], false)
+    converted_data = Hash.new
+    data.each { |k, v|
+      converted_data[k.to_sym] = v
+    }
+    new = pokemon.assign_stats(converted_data)
+    puts converted_data
+    return new
   end
 
   def serialize
