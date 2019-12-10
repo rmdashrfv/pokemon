@@ -13,6 +13,8 @@
 Session.vim
 Sessionx.vim
 
+./public/gamedata
+
 # Temporary
 .netrwhist
 *~

@@ -10,7 +10,7 @@ class Pokemon
   attr_accessor :name, :img_front, :img_back, :loaded
   attr_reader :id, :level, :sp_atk, :sp_def, :atk, :defense, :hp, :exp
   def initialize(name, init=true)
-    @id = SecureRandom.hex(12)
+    #@id = SecureRandom.hex(12)
     @name = name
     @hp = nil
     @atk = nil
@@ -48,6 +48,7 @@ class Pokemon
   end
 
   def assign_stats(s)
+    @id = s[:id]
     @hp = s[:hp]
     @atk = s[:atk]
     @defense = s[:defense]
@@ -66,8 +67,7 @@ class Pokemon
     data.each { |k, v|
       converted_data[k.to_sym] = v
     }
-    new = pokemon.assign_stats(converted_data)
-    puts converted_data
+    pokemon.assign_stats(converted_data)
     return pokemon
   end
 
@@ -104,7 +104,7 @@ class Pokemon
   def save
     # whatever the state of the current instance
     # write that to the pokemon's file
-    File.open(%(./public/gamedata/#{@name.downcase}_#{@id}.json), 'w') { |f|
+    File.open(%(./public/gamedata/#{@id}.json), 'w') { |f|
       f.write(%(#{self.serialize}))
     } 
   end

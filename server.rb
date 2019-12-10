@@ -7,12 +7,10 @@ get '/' do
 end
 
 get '/pokemon/:id' do
-  file = File.open(%(_#{params[:id]}), 'r')
-  if file
-    puts "Found a pokemon!"
-  else
-    puts "404 POKEMON NOT FOUND"
-  end
+  id = params[:id]
+  file = File.open(%(./public/gamedata/#{id}.json), 'r')
+  @pokemon = Pokemon.load(file.read)
+  erb :pokemon
 end
 
 get '/team' do
@@ -22,6 +20,7 @@ get '/team' do
     f = File.open(path + file, 'r')
     next if File.directory?(f)
     pokemon = Pokemon.load(f.read)
+    p pokemon
     @party << pokemon
     f.close
   }
