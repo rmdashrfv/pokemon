@@ -7,10 +7,11 @@ class Pokemon
   # Every time the pokemon levels up, it will gain a small boost in stats in 2 areas
   # the stat boost should be 3% of whatever the stat currently is
   @@url = 'https://pokeapi.co/api/v2/'
-  attr_accessor :name, :img_front, :img_back, :loaded
-  attr_reader :id, :level, :sp_atk, :sp_def, :atk, :defense, :hp, :exp
-  def initialize(name, init=true)
-    #@id = SecureRandom.hex(12)
+  $id = SecureRandom.hex(12)
+  attr_accessor :id, :name, :img_front, :img_back, :loaded
+  attr_reader :level, :sp_atk, :sp_def, :atk, :defense, :hp, :exp
+  def initialize(id, name, init=true)
+    @id = id
     @name = name
     @hp = nil
     @atk = nil
@@ -24,12 +25,17 @@ class Pokemon
     @loaded = false
     @init = init
     self.request_pokemon if init == true
+    self.generate_id if init
   end
   
+  def generate_id
+    p "running this"
+    @id = SecureRandom.hex(12)
+  end
+
   def request_pokemon
     # req = Curl::Easy.perform(%(#{@@url}pokemon/#{@name.downcase}))
     # data = JSON.parse(req.body_str)
-    puts "REQUESTING POKEMON API"
     req = HTTParty.get(%(#{@@url}pokemon/#{@name.downcase}))
     data = JSON.parse(req.body)
     stats = {
@@ -48,7 +54,6 @@ class Pokemon
   end
 
   def assign_stats(s)
-    @id = s[:id]
     @hp = s[:hp]
     @atk = s[:atk]
     @defense = s[:defense]
@@ -62,7 +67,7 @@ class Pokemon
 
   def self.load(str)
     data = JSON.parse str
-    pokemon = Pokemon.new(data['name'], false)
+    pokemon = Pokemon.new(data['id'], data['name'], false)
     converted_data = Hash.new
     data.each { |k, v|
       converted_data[k.to_sym] = v

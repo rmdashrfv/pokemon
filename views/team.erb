@@ -9,7 +9,7 @@
   <h1>Pokemon Team</h1>
   <% @party.each do |pokemon| %>
     <a href="/pokemon/<%= pokemon.id %>">
-    <div class="pokemon-card" id="<%= pokemon.id %>">
+      <div class="pokemon-card" id="<%= pokemon.id %>">
       <h3><%= pokemon.name %> Lv. <%= pokemon.level %></h3>
       <img src="<%= pokemon.img_front %>">
     </div>

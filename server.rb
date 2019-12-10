@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'securerandom'
 require './pokemon.rb'
 set :port, 3000
 
@@ -20,7 +21,6 @@ get '/team' do
     f = File.open(path + file, 'r')
     next if File.directory?(f)
     pokemon = Pokemon.load(f.read)
-    p pokemon
     @party << pokemon
     f.close
   }
@@ -28,8 +28,9 @@ get '/team' do
 end
 
 post '/pokemon' do
-  puts params
-  pokemon = Pokemon.new(params['pokemon_name'])
+  id = SecureRandom.hex(12)
+  pokemon = Pokemon.new(id, params['pokemon_name'])
   pokemon.save
-  return pokemon.serialize
+  pokemon.serialize
+  redirect '/team'
 end
